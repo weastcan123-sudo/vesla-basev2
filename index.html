@@ -1,1 +1,203 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Samsun İmsakiye 2026 - Kusursuz Simetri</title>
+    <style>
+        :root {
+            --bg: #f0f4f2; --card: #ffffff; --text: #2d3436; --sub: #636e72; 
+            --accent: #27ae60; --accent-soft: rgba(39, 174, 96, 0.1); 
+            --brd: #e0eada; --panel-bg: #ffffff; --table-head: #1e8449; 
+        }
+        [data-theme="dark"] {
+            --bg: #0f1411; --card: #1a1f1c; --text: #e0e0e0; --sub: #95a5a6; --brd: #2c3e50; --panel-bg: #141916;
+        }
 
+        body { background: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; overflow: hidden; }
+
+        /* ANA KART */
+        .card { 
+            background: var(--card); padding: 50px; border-radius: 40px; box-shadow: 0 20px 45px rgba(0,0,0,0.1); 
+            text-align: center; width: 520px; position: relative; z-index: 5; transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1); 
+        }
+        .card.shifted { transform: translateX(-350px); }
+
+        /* SAYAÇ BÖLGESİ - SİMETRİ AYARI */
+        .progress-box { position: relative; width: 340px; height: 170px; margin: 0 auto; overflow: hidden; }
+
+        .bar-under { 
+            width: 340px; height: 340px; border: 15px solid #eef2f0; border-radius: 50%; 
+            position: absolute; top: 0; box-sizing: border-box; 
+        }
+
+        .bar-over { 
+            width: 340px; height: 340px; border: 20px solid var(--accent); border-radius: 50%; 
+            position: absolute; top: 0; box-sizing: border-box; 
+            border-bottom-color: transparent; border-left-color: transparent; 
+            /* Başlangıç noktası tam sol (-135deg) */
+            transform: rotate(-135deg); 
+            transition: 0.3s linear;
+            z-index: 2;
+        }
+
+        /* DİĞER ÖGELER */
+        .timer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 35px; border-top: 1px solid var(--brd); padding-top: 35px; }
+        .num { font-size: 3.8rem; font-weight: bold; color: var(--text); line-height: 1; }
+        .unit { color: var(--sub); font-size: 0.85rem; text-transform: uppercase; margin-top: 8px; font-weight: 600; }
+
+        .top-btns { position: absolute; top: 30px; right: 30px; display: flex; gap: 12px; }
+        .circle-btn { background: var(--accent-soft); border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+
+        .side-panel { 
+            position: fixed; top: 0; right: -650px; width: 620px; height: 100vh; 
+            background: var(--panel-bg); box-shadow: -15px 0 40px rgba(0,0,0,0.1); 
+            transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); z-index: 10; padding: 30px; overflow-y: auto;
+        }
+        .side-panel.active { right: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; text-align: center; }
+        th { background: var(--table-head); color: white; padding: 12px; }
+        td { padding: 10px; border-bottom: 1px solid var(--brd); color: var(--text); }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="main-card">
+        <div class="top-btns">
+            <button class="circle-btn" onclick="togglePanel()">📅</button>
+            <button class="circle-btn" id="theme-toggle">🌓</button>
+        </div>
+        <div class="progress-box">
+            <div class="bar-under"></div>
+            <div id="active-bar" class="bar-over"></div>
+        </div>
+        <div id="status" style="color:var(--accent); margin-top:20px; font-size: 1.4rem; font-weight: bold;">VAKİT HESAPLANIYOR...</div>
+        <div class="timer">
+            <div><div id="h" class="num">00</div><div class="unit">Saat</div></div>
+            <div><div id="m" class="num">00</div><div class="unit">Dakika</div></div>
+            <div><div id="s" class="num">00</div><div class="unit">Saniye</div></div>
+        </div>
+        <div id="next-vakit-time" style="margin-top:20px; color:var(--sub); font-weight: 500;">--:--</div>
+        <div style="margin-top:25px; font-weight:bold; color:var(--text); font-size:1.6rem;">📍 SAMSUN</div>
+    </div>
+
+    <div id="side-panel" class="side-panel">
+        <h3 style="color:var(--table-head); border-bottom: 2px solid var(--accent); padding-bottom: 10px;">Samsun Ramazan 2026</h3>
+        <table>
+            <thead>
+                <tr><th>#</th><th>Tarih</th><th>İmsak</th><th>Öğle</th><th>Akşam</th><th>Yatsı</th></tr>
+            </thead>
+            <tbody id="imsakiye-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const imsakiye = [
+            {n:1, d:"19 Şub Per", i:"05:52", g:"07:18", o:"12:54", ik:"15:50", a:"18:20", y:"19:40"},
+            {n:2, d:"20 Şub Cum", i:"05:51", g:"07:16", o:"12:53", ik:"15:51", a:"18:21", y:"19:41"},
+            {n:3, d:"21 Şub Cmt", i:"05:50", g:"07:15", o:"12:53", ik:"15:52", a:"18:22", y:"19:42"},
+            {n:4, d:"22 Şub Paz", i:"05:48", g:"07:13", o:"12:53", ik:"15:52", a:"18:23", y:"19:43"},
+            {n:5, d:"23 Şub Pzt", i:"05:47", g:"07:12", o:"12:53", ik:"15:53", a:"18:24", y:"19:44"},
+            {n:6, d:"24 Şub Sal", i:"05:45", g:"07:10", o:"12:53", ik:"15:54", a:"18:26", y:"19:45"},
+            {n:7, d:"25 Şub Çar", i:"05:44", g:"07:09", o:"12:53", ik:"15:55", a:"18:27", y:"19:46"},
+            {n:8, d:"26 Şub Per", i:"05:43", g:"07:07", o:"12:53", ik:"15:56", a:"18:28", y:"19:47"},
+            {n:9, d:"27 Şub Cum", i:"05:41", g:"07:06", o:"12:52", ik:"15:57", a:"18:29", y:"19:49"},
+            {n:10,d:"28 Şub Cmt", i:"05:40", g:"07:04", o:"12:52", ik:"15:57", a:"18:30", y:"19:50"},
+            {n:11,d:"1 Mart Paz", i:"05:38", g:"07:03", o:"12:52", ik:"15:58", a:"18:31", y:"19:51"},
+            {n:12,d:"2 Mart Pzt", i:"05:37", g:"07:01", o:"12:52", ik:"15:59", a:"18:33", y:"19:52"},
+            {n:13,d:"3 Mart Sal", i:"05:35", g:"07:00", o:"12:52", ik:"16:00", a:"18:34", y:"19:53"},
+            {n:14,d:"4 Mart Çar", i:"05:33", g:"06:58", o:"12:51", ik:"16:01", a:"18:35", y:"19:54"},
+            {n:15,d:"5 Mart Per", i:"05:32", g:"06:56", o:"12:51", ik:"16:01", a:"18:36", y:"19:55"},
+            {n:16,d:"6 Mart Cum", i:"05:30", g:"06:55", o:"12:51", ik:"16:02", a:"18:37", y:"19:57"},
+            {n:17,d:"7 Mart Cmt", i:"05:29", g:"06:53", o:"12:51", ik:"16:03", a:"18:38", y:"19:58"},
+            {n:18,d:"8 Mart Paz", i:"05:27", g:"06:52", o:"12:51", ik:"16:03", a:"18:40", y:"19:59"},
+            {n:19,d:"9 Mart Pzt", i:"05:25", g:"06:50", o:"12:50", ik:"16:04", a:"18:41", y:"20:00"},
+            {n:20,d:"10 Mart Sal", i:"05:24", g:"06:48", o:"12:50", ik:"16:05", a:"18:42", y:"20:01"},
+            {n:21,d:"11 Mart Çar", i:"05:22", g:"06:47", o:"12:50", ik:"16:05", a:"18:43", y:"20:02"},
+            {n:22,d:"12 Mart Per", i:"05:20", g:"06:45", o:"12:50", ik:"16:06", a:"18:44", y:"20:04"},
+            {n:23,d:"13 Mart Cum", i:"05:19", g:"06:43", o:"12:49", ik:"16:07", a:"18:45", y:"20:05"},
+            {n:24,d:"14 Mart Cmt", i:"05:17", g:"06:42", o:"12:49", ik:"16:07", a:"18:46", y:"20:06"},
+            {n:25,d:"15 Mart Paz", i:"05:15", g:"06:40", o:"12:49", ik:"16:08", a:"18:47", y:"20:07"},
+            {n:26,d:"16 Mart Pzt", i:"05:13", g:"06:38", o:"12:48", ik:"16:09", a:"18:49", y:"20:08"},
+            {n:27,d:"17 Mart Sal", i:"05:12", g:"06:37", o:"12:48", ik:"16:09", a:"18:50", y:"20:09"},
+            {n:28,d:"18 Mart Çar", i:"05:10", g:"06:35", o:"12:48", ik:"16:10", a:"18:51", y:"20:11"},
+            {n:29,d:"19 Mart Per", i:"05:08", g:"06:33", o:"12:48", ik:"16:10", a:"18:52", y:"20:12"}
+        ];
+
+        function updateTimer() {
+            const now = new Date();
+            // Simülasyon: Bugünü listeden bul (Gerçek tarihe göre eşleşme yapılabilir)
+            const bugun = imsakiye[0]; 
+
+            const vakitler = [
+                { isim: "İMSAK", saat: bugun.i }, { isim: "GÜNEŞ", saat: bugun.g },
+                { isim: "ÖĞLE", saat: bugun.o }, { isim: "İKİNDİ", saat: bugun.ik },
+                { isim: "AKŞAM", saat: bugun.a }, { isim: "YATSI", saat: bugun.y }
+            ];
+
+            let hedefIdx = -1;
+            for (let i = 0; i < vakitler.length; i++) {
+                const [vh, vm] = vakitler[i].saat.split(':');
+                const vDate = new Date(); vDate.setHours(vh, vm, 0);
+                if (now < vDate) { hedefIdx = i; break; }
+            }
+
+            let hedef, onceki;
+            if (hedefIdx === -1) { 
+                hedef = { isim: "İMSAK", saat: imsakiye[1].i, yarin: true };
+                onceki = vakitler[5];
+            } else {
+                hedef = vakitler[hedefIdx];
+                onceki = hedefIdx === 0 ? { saat: "00:00" } : vakitler[hedefIdx-1];
+            }
+
+            const [hh, mm] = hedef.saat.split(':');
+            const target = new Date(); target.setHours(hh, mm, 0);
+            if (hedef.yarin) target.setDate(target.getDate() + 1);
+
+            const [ph, pm] = onceki.saat.split(':');
+            const prev = new Date(); prev.setHours(ph, pm, 0);
+
+            const diff = target - now;
+            const total = target - prev;
+            const elapsed = now - prev;
+
+            // KUSURSUZ BAR HESABI
+            // Yüzde 0-1 arası: Geçen / Toplam
+            let percent = elapsed / total;
+            if (percent < 0) percent = 0;
+            if (percent > 1) percent = 1;
+
+            // -135 dereceden başlayıp 180 derece dönerek +45 derecede biter.
+            const rotation = -135 + (percent * 180);
+            document.getElementById('active-bar').style.transform = `rotate(${rotation}deg)`;
+
+            document.getElementById('status').innerText = hedef.isim + " VAKTİNE KALAN";
+            document.getElementById('next-vakit-time').innerText = "Vakit Saati: " + hedef.saat;
+
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff / 60000) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            document.getElementById('h').innerText = h.toString().padStart(2, '0');
+            document.getElementById('m').innerText = m.toString().padStart(2, '0');
+            document.getElementById('s').innerText = s.toString().padStart(2, '0');
+        }
+
+        function togglePanel() {
+            document.getElementById('side-panel').classList.toggle('active');
+            document.getElementById('main-card').classList.toggle('shifted');
+        }
+
+        document.getElementById('theme-toggle').onclick = () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        };
+
+        const tbody = document.getElementById('imsakiye-body');
+        imsakiye.forEach(row => {
+            tbody.innerHTML += `<tr><td>${row.n}</td><td>${row.d}</td><td>${row.i}</td><td>${row.o}</td><td>${row.a}</td><td>${row.y}</td></tr>`;
+        });
+
+        setInterval(updateTimer, 1000); updateTimer();
+    </script>
+</body>
+</html>
