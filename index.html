@@ -1,203 +1,865 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <title>Samsun İmsakiye 2026 - Kusursuz Simetri</title>
-    <style>
-        :root {
-            --bg: #f0f4f2; --card: #ffffff; --text: #2d3436; --sub: #636e72; 
-            --accent: #27ae60; --accent-soft: rgba(39, 174, 96, 0.1); 
-            --brd: #e0eada; --panel-bg: #ffffff; --table-head: #1e8449; 
-        }
-        [data-theme="dark"] {
-            --bg: #0f1411; --card: #1a1f1c; --text: #e0e0e0; --sub: #95a5a6; --brd: #2c3e50; --panel-bg: #141916;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samsun İftar Vakti</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230b0f0d'/><path d='M62 22 C42 22 26 36 26 54 C26 72 42 84 60 84 C46 78 36 67 36 54 C36 39 48 28 62 22Z' fill='%233dba6f'/><circle cx='68' cy='30' r='5' fill='%233dba6f' opacity='0.8'/><circle cx='76' cy='44' r='3' fill='%233dba6f' opacity='0.6'/></svg>">
+<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230b0f0d'/><path d='M62 22 C42 22 26 36 26 54 C26 72 42 84 60 84 C46 78 36 67 36 54 C36 39 48 28 62 22Z' fill='%233dba6f'/><circle cx='68' cy='30' r='5' fill='%233dba6f' opacity='0.8'/><circle cx='76' cy='44' r='3' fill='%233dba6f' opacity='0.6'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════ TEMA */
+:root {
+  --bg:        #0b0f0d;
+  --text:      #e8ede9;
+  --sub:       #5a7060;
+  --accent:    #3dba6f;
+  --dim:       rgba(61,186,111,0.09);
+  --border:    rgba(61,186,111,0.15);
+  --glow:      rgba(61,186,111,0.22);
+  --track:     rgba(255,255,255,0.07);
+  --row-alt:   #111815;
+  --today-bg:  rgba(61,186,111,0.13);
+  --today-txt: #3dba6f;
+  --card-bg:   rgba(20,30,24,0.8);
+}
+[data-theme="light"] {
+  --bg:        #f4f8f5;
+  --text:      #1a2b1f;
+  --sub:       #7a9882;
+  --accent:    #27a85a;
+  --dim:       rgba(39,168,90,0.07);
+  --border:    rgba(39,168,90,0.16);
+  --glow:      rgba(39,168,90,0.18);
+  --track:     rgba(0,0,0,0.07);
+  --row-alt:   #eaf2ec;
+  --today-bg:  rgba(39,168,90,0.12);
+  --today-txt: #1e8847;
+  --card-bg:   rgba(255,255,255,0.85);
+}
 
-        body { background: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; overflow: hidden; }
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  font-family:'Nunito',sans-serif;
+  transition:background .6s, color .4s;
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-        /* ANA KART */
-        .card { 
-            background: var(--card); padding: 50px; border-radius: 40px; box-shadow: 0 20px 45px rgba(0,0,0,0.1); 
-            text-align: center; width: 520px; position: relative; z-index: 5; transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1); 
-        }
-        .card.shifted { transform: translateX(-350px); }
+/* ══════════════ TEMA BUTONU */
+.theme-btn{
+  position:fixed;top:18px;left:18px;z-index:200;
+  width:44px;height:44px;border-radius:10px;
+  background:var(--dim);border:1px solid var(--border);
+  color:var(--accent);font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .15s;
+}
+.theme-btn:hover{background:rgba(61,186,111,.18);transform:scale(1.06);}
 
-        /* SAYAÇ BÖLGESİ - SİMETRİ AYARI */
-        .progress-box { position: relative; width: 340px; height: 170px; margin: 0 auto; overflow: hidden; }
+/* ══════════════ BİLDİRİM BUTONU */
+.notif-btn{
+  position:fixed;top:18px;left:70px;z-index:200;
+  width:44px;height:44px;border-radius:10px;
+  background:var(--dim);border:1px solid var(--border);
+  color:var(--accent);font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .15s;
+}
+.notif-btn:hover{background:rgba(61,186,111,.18);transform:scale(1.06);}
+.notif-btn.aktif{background:rgba(61,186,111,.2);border-color:var(--accent);}
 
-        .bar-under { 
-            width: 340px; height: 340px; border: 15px solid #eef2f0; border-radius: 50%; 
-            position: absolute; top: 0; box-sizing: border-box; 
-        }
+/* ══════════════ AMBIENT + SHAPES */
+.ambient{
+  position:fixed;width:560px;height:560px;
+  background:radial-gradient(circle,var(--glow) 0%,transparent 65%);
+  top:40%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;z-index:0;
+  animation:pulse 5s ease-in-out infinite;
+  transition:background 1.5s;
+}
+/* İftar renk geçişi için özel ambient */
+.ambient.iftar-yakın{
+  background:radial-gradient(circle,rgba(240,160,40,0.28) 0%,transparent 65%);
+}
+.ambient.iftar-tam{
+  background:radial-gradient(circle,rgba(240,80,40,0.22) 0%,transparent 65%);
+}
+@keyframes pulse{0%,100%{opacity:.55;}50%{opacity:1;}}
 
-        .bar-over { 
-            width: 340px; height: 340px; border: 20px solid var(--accent); border-radius: 50%; 
-            position: absolute; top: 0; box-sizing: border-box; 
-            border-bottom-color: transparent; border-left-color: transparent; 
-            /* Başlangıç noktası tam sol (-135deg) */
-            transform: rotate(-135deg); 
-            transition: 0.3s linear;
-            z-index: 2;
-        }
+.shapes{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.sh{position:absolute;border:1.5px solid rgba(61,186,111,0.10);border-radius:50%;animation:floatUp ease-in-out infinite;}
+[data-theme="light"] .sh{border-color:rgba(39,168,90,0.08);}
+.sh.diamond{border-radius:0;animation-name:floatDia;}
+.sh.tri{border:none;background:none;width:0!important;height:0!important;
+  border-left:8px solid transparent;border-right:8px solid transparent;
+  border-bottom:14px solid rgba(61,186,111,0.08);animation-name:floatTri;}
+[data-theme="light"] .sh.tri{border-bottom-color:rgba(39,168,90,0.07);}
+@keyframes floatUp{0%,100%{transform:translateY(0) rotate(0deg);opacity:.32;}50%{transform:translateY(-28px) rotate(5deg);opacity:.65;}}
+@keyframes floatDia{0%,100%{transform:rotate(45deg) translateY(0);opacity:.38;}50%{transform:rotate(52deg) translateY(-22px);opacity:.72;}}
+@keyframes floatTri{0%,100%{transform:translateY(0);opacity:.28;}50%{transform:translateY(-20px) rotate(4deg);opacity:.58;}}
 
-        /* DİĞER ÖGELER */
-        .timer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 35px; border-top: 1px solid var(--brd); padding-top: 35px; }
-        .num { font-size: 3.8rem; font-weight: bold; color: var(--text); line-height: 1; }
-        .unit { color: var(--sub); font-size: 0.85rem; text-transform: uppercase; margin-top: 8px; font-weight: 600; }
+/* ══════════════ HİLAL SVG */
+.hilal{
+  position:fixed;top:14px;right:20px;
+  z-index:200;opacity:.7;
+  animation:hilalFloat 6s ease-in-out infinite;
+}
+@keyframes hilalFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
 
-        .top-btns { position: absolute; top: 30px; right: 30px; display: flex; gap: 12px; }
-        .circle-btn { background: var(--accent-soft); border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+/* ══════════════ HERO */
+.hero{
+  position:relative;z-index:2;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:70px 20px 50px;
+}
 
-        .side-panel { 
-            position: fixed; top: 0; right: -650px; width: 620px; height: 100vh; 
-            background: var(--panel-bg); box-shadow: -15px 0 40px rgba(0,0,0,0.1); 
-            transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); z-index: 10; padding: 30px; overflow-y: auto;
-        }
-        .side-panel.active { right: 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; text-align: center; }
-        th { background: var(--table-head); color: white; padding: 12px; }
-        td { padding: 10px; border-bottom: 1px solid var(--brd); color: var(--text); }
-    </style>
+/* ══════════════ BAŞLIK */
+.city{font-size:2rem;font-weight:900;color:var(--text);letter-spacing:.07em;text-transform:uppercase;text-align:center;}
+.city span{color:var(--accent);}
+.subtitle{font-size:1.05rem;font-weight:700;color:var(--text);opacity:.8;margin-top:5px;text-align:center;}
+.dateline{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--sub);margin-top:5px;text-align:center;}
+
+/* ══════════════ RAMAZAN GÜN ROZET */
+.gun-rozet{
+  margin-top:12px;
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--dim);border:1px solid var(--border);
+  border-radius:50px;padding:5px 16px 5px 12px;
+  font-size:.72rem;font-weight:700;color:var(--accent);
+  letter-spacing:.04em;
+}
+.gun-rozet .hilal-mini{font-size:.85rem;}
+
+/* ══════════════ HALF-RING */
+.ring-wrap{
+  position:relative;width:360px;height:190px;
+  margin-top:28px;overflow:hidden;
+}
+.ring-wrap svg{width:360px;height:360px;position:absolute;top:0;left:0;}
+.r-track{fill:none;stroke:var(--track);stroke-width:20;stroke-linecap:round;}
+.r-fill{
+  fill:none;stroke:var(--accent);stroke-width:20;stroke-linecap:round;
+  stroke-dasharray:509;stroke-dashoffset:509;
+  transition:stroke-dashoffset .6s ease,stroke .5s;
+  filter:drop-shadow(0 0 9px var(--glow));
+}
+.ring-info{
+  position:absolute;bottom:22px;left:0;right:0;
+  display:flex;flex-direction:column;align-items:center;gap:2px;z-index:2;
+}
+.ri-label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);}
+.ri-vakit{font-size:1rem;font-weight:800;color:var(--accent);letter-spacing:.04em;transition:color .5s;}
+.ri-time{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--sub);}
+
+/* ══════════════ COUNTDOWN */
+.countdown{display:flex;align-items:flex-end;gap:0;margin-top:14px;}
+.cd-block{display:flex;flex-direction:column;align-items:center;min-width:88px;}
+.cd-num{font-family:'JetBrains Mono',monospace;font-size:4rem;font-weight:600;color:var(--text);line-height:1;letter-spacing:-.02em;transition:color .5s;}
+.cd-unit{font-size:.62rem;font-weight:700;letter-spacing:.12em;color:var(--sub);text-transform:uppercase;margin-top:5px;}
+.cd-sep{font-family:'JetBrains Mono',monospace;font-size:3rem;color:var(--accent);padding:0 4px;padding-bottom:8px;opacity:.45;line-height:1;}
+
+/* ══════════════ VAKİT SEÇİCİ */
+.vakit-picker{
+  display:flex;gap:7px;flex-wrap:nowrap;justify-content:center;
+  margin-top:20px;width:100%;max-width:520px;
+}
+.vp-btn{
+  background:var(--dim);border:1.5px solid var(--border);border-radius:12px;
+  color:var(--sub);font-family:'Nunito',sans-serif;
+  font-size:.7rem;font-weight:700;letter-spacing:.03em;
+  padding:8px 8px 7px;cursor:pointer;
+  transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;
+  line-height:1;flex:1;min-width:0;position:relative;
+}
+.vp-btn .vp-isim{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;}
+.vp-btn .vp-saat{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:400;opacity:.55;white-space:nowrap;}
+.vp-btn:hover{background:rgba(61,186,111,.13);border-color:rgba(61,186,111,.3);color:var(--text);}
+.vp-btn.active{background:var(--accent);border-color:var(--accent);color:#000;box-shadow:0 0 14px var(--glow);}
+.vp-btn.active .vp-saat{opacity:.75;color:#000;}
+.vp-btn.auto-tag::after{content:'●';position:absolute;top:5px;right:5px;font-size:.38rem;opacity:.6;}
+
+/* ══════════════ HAVA DURUMU */
+.hava-card{
+  display:flex;align-items:center;gap:16px;
+  margin-top:18px;
+  background:var(--dim);
+  border:1.5px solid var(--border);
+  border-radius:50px;
+  padding:10px 22px 10px 16px;
+}
+.hava-icon{font-size:1.6rem;line-height:1;}
+.hava-temp{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.3rem;font-weight:600;
+  color:var(--text);line-height:1;
+}
+.hava-divider{width:1px;height:28px;background:var(--border);}
+.hava-right{display:flex;flex-direction:column;gap:1px;}
+.hava-desc{font-size:.72rem;font-weight:700;color:var(--text);opacity:.8;}
+.hava-extra{font-size:.62rem;color:var(--sub);}
+
+/* ══════════════ VEKİT ANİMASYON OVERLAY */
+.vakit-overlay{
+  position:fixed;inset:0;z-index:300;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;opacity:0;
+  transition:opacity .5s;
+}
+.vakit-overlay.show{opacity:1;}
+.vakit-msg{
+  font-size:2rem;font-weight:900;
+  color:var(--accent);letter-spacing:.06em;
+  text-align:center;
+  text-shadow:0 0 30px var(--glow);
+  animation:msgPop .6s cubic-bezier(.19,1,.22,1);
+}
+.vakit-ring-flash{
+  position:fixed;inset:0;
+  background:radial-gradient(circle,var(--glow) 0%,transparent 60%);
+  z-index:299;opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.vakit-ring-flash.flash{opacity:1;animation:flashOut 1.5s ease-out forwards;}
+@keyframes flashOut{0%{opacity:.8;}100%{opacity:0;}}
+@keyframes msgPop{0%{transform:scale(.7);opacity:0;}100%{transform:scale(1);opacity:1;}}
+
+/* ══════════════ SCROLL BUTONU */
+.scroll-hint{
+  margin-top:26px;
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--dim);border:1.5px solid rgba(61,186,111,0.35);
+  border-radius:50px;padding:13px 32px;
+  font-size:.9rem;font-weight:700;color:var(--accent);
+  letter-spacing:.05em;cursor:pointer;
+  animation:bounce 2.5s ease-in-out infinite;
+  transition:background .2s,border-color .2s,box-shadow .2s;
+}
+.scroll-hint:hover{background:rgba(61,186,111,.15);border-color:var(--accent);box-shadow:0 0 20px var(--glow);animation-play-state:paused;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+/* ══════════════ TAKVİM */
+.calendar-section{
+  position:relative;z-index:2;
+  padding:60px 20px 80px;
+  max-width:780px;margin:0 auto;
+}
+.cal-title{font-size:1.3rem;font-weight:900;color:var(--text);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;}
+.cal-sub{font-size:.78rem;color:var(--sub);margin-bottom:24px;}
+.mtabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.mtab{
+  background:var(--dim);border:1px solid var(--border);border-radius:50px;
+  color:var(--sub);font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;
+  padding:7px 20px;cursor:pointer;transition:all .2s;
+}
+.mtab.active{background:var(--accent);color:#000;border-color:var(--accent);}
+.table-wrap{border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,.25);}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+th{background:var(--accent);color:#000;font-weight:800;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:13px 10px;text-align:center;}
+td{padding:10px 10px;text-align:center;color:var(--text);border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.78rem;transition:background .2s;}
+tbody tr:nth-child(even) td{background:var(--row-alt);}
+tbody tr:hover td{background:var(--dim)!important;}
+tbody tr.today td{background:var(--today-bg)!important;color:var(--today-txt);font-weight:700;}
+tbody tr.today td:first-child{border-left:3px solid var(--accent);}
+.kadir{text-align:center;padding:14px;background:rgba(61,186,111,.07);color:var(--accent);font-weight:800;font-size:.8rem;letter-spacing:.04em;border-bottom:1px solid var(--border);}
+[data-theme="light"] .kadir{background:rgba(39,168,90,.06);}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+</style>
 </head>
 <body>
 
-    <div class="card" id="main-card">
-        <div class="top-btns">
-            <button class="circle-btn" onclick="togglePanel()">📅</button>
-            <button class="circle-btn" id="theme-toggle">🌓</button>
-        </div>
-        <div class="progress-box">
-            <div class="bar-under"></div>
-            <div id="active-bar" class="bar-over"></div>
-        </div>
-        <div id="status" style="color:var(--accent); margin-top:20px; font-size: 1.4rem; font-weight: bold;">VAKİT HESAPLANIYOR...</div>
-        <div class="timer">
-            <div><div id="h" class="num">00</div><div class="unit">Saat</div></div>
-            <div><div id="m" class="num">00</div><div class="unit">Dakika</div></div>
-            <div><div id="s" class="num">00</div><div class="unit">Saniye</div></div>
-        </div>
-        <div id="next-vakit-time" style="margin-top:20px; color:var(--sub); font-weight: 500;">--:--</div>
-        <div style="margin-top:25px; font-weight:bold; color:var(--text); font-size:1.6rem;">📍 SAMSUN</div>
+<!-- Tema Butonu -->
+<button class="theme-btn" onclick="toggleTheme()"><span id="t-icon">☀️</span></button>
+
+<!-- Bildirim Butonu -->
+<button class="notif-btn" id="notif-btn" onclick="bildirimToggle()" title="Bildirim Aç/Kapat">🔕</button>
+
+<!-- Hilal & Yıldız -->
+<div class="hilal">
+  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+    <path d="M34 10 C20 10 10 19 10 30 C10 41 20 48 32 48 C22 44 16 37 16 30 C16 21 24 14 34 10Z"
+      fill="var(--accent)" opacity="0.75"/>
+    <circle cx="38" cy="14" r="2.2" fill="var(--accent)" opacity="0.55"/>
+    <circle cx="44" cy="22" r="1.4" fill="var(--accent)" opacity="0.4"/>
+    <circle cx="41" cy="8"  r="1"   fill="var(--accent)" opacity="0.35"/>
+  </svg>
+</div>
+
+<div class="ambient" id="ambient"></div>
+<div class="shapes" id="shapes"></div>
+
+<!-- Vakit Overlay -->
+<div class="vakit-ring-flash" id="ring-flash"></div>
+<div class="vakit-overlay" id="vakit-overlay">
+  <div class="vakit-msg" id="vakit-msg"></div>
+</div>
+
+<!-- ══ HERO -->
+<section class="hero">
+  <div class="city">SAM<span>SUN</span></div>
+  <div class="subtitle">İftar Vakti</div>
+  <div class="dateline" id="date-line">YÜKLENİYOR...</div>
+
+  <!-- Ramazan kaçıncı günü -->
+  <div class="gun-rozet" id="gun-rozet" style="display:none">
+    <span class="hilal-mini">☽</span>
+    <span id="gun-text">Ramazan'ın — günü</span>
+  </div>
+
+  <!-- Yarım daire ring -->
+  <div class="ring-wrap">
+    <svg viewBox="0 0 360 360">
+      <path class="r-track" d="M 18,180 A 162,162 0 0,1 342,180"/>
+      <path class="r-fill" id="rfill" d="M 18,180 A 162,162 0 0,1 342,180"
+        stroke-dasharray="509" stroke-dashoffset="509"/>
+    </svg>
+    <div class="ring-info">
+      <div class="ri-label" id="ri-label">VAKİTE KALAN</div>
+      <div class="ri-vakit" id="ri-vakit">---</div>
+      <div class="ri-time"  id="ri-time">--:--</div>
     </div>
+  </div>
 
-    <div id="side-panel" class="side-panel">
-        <h3 style="color:var(--table-head); border-bottom: 2px solid var(--accent); padding-bottom: 10px;">Samsun Ramazan 2026</h3>
-        <table>
-            <thead>
-                <tr><th>#</th><th>Tarih</th><th>İmsak</th><th>Öğle</th><th>Akşam</th><th>Yatsı</th></tr>
-            </thead>
-            <tbody id="imsakiye-body"></tbody>
-        </table>
+
+
+  <!-- Ana geri sayım -->
+  <div class="countdown">
+    <div class="cd-block"><div class="cd-num" id="h">00</div><div class="cd-unit">Saat</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-block"><div class="cd-num" id="m">00</div><div class="cd-unit">Dakika</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-block"><div class="cd-num" id="s">00</div><div class="cd-unit">Saniye</div></div>
+  </div>
+
+  <!-- Vakit seçici -->
+  <div class="vakit-picker" id="vakit-picker"></div>
+
+  <!-- Hava durumu -->
+  <div class="hava-card" id="hava-card">
+    <div class="hava-icon" id="hava-icon">⏳</div>
+    <div class="hava-temp" id="hava-temp">--°</div>
+    <div class="hava-divider"></div>
+    <div class="hava-right">
+      <div class="hava-desc" id="hava-desc">Yükleniyor...</div>
+      <div class="hava-extra" id="hava-extra">Samsun</div>
     </div>
+  </div>
 
-    <script>
-        const imsakiye = [
-            {n:1, d:"19 Şub Per", i:"05:52", g:"07:18", o:"12:54", ik:"15:50", a:"18:20", y:"19:40"},
-            {n:2, d:"20 Şub Cum", i:"05:51", g:"07:16", o:"12:53", ik:"15:51", a:"18:21", y:"19:41"},
-            {n:3, d:"21 Şub Cmt", i:"05:50", g:"07:15", o:"12:53", ik:"15:52", a:"18:22", y:"19:42"},
-            {n:4, d:"22 Şub Paz", i:"05:48", g:"07:13", o:"12:53", ik:"15:52", a:"18:23", y:"19:43"},
-            {n:5, d:"23 Şub Pzt", i:"05:47", g:"07:12", o:"12:53", ik:"15:53", a:"18:24", y:"19:44"},
-            {n:6, d:"24 Şub Sal", i:"05:45", g:"07:10", o:"12:53", ik:"15:54", a:"18:26", y:"19:45"},
-            {n:7, d:"25 Şub Çar", i:"05:44", g:"07:09", o:"12:53", ik:"15:55", a:"18:27", y:"19:46"},
-            {n:8, d:"26 Şub Per", i:"05:43", g:"07:07", o:"12:53", ik:"15:56", a:"18:28", y:"19:47"},
-            {n:9, d:"27 Şub Cum", i:"05:41", g:"07:06", o:"12:52", ik:"15:57", a:"18:29", y:"19:49"},
-            {n:10,d:"28 Şub Cmt", i:"05:40", g:"07:04", o:"12:52", ik:"15:57", a:"18:30", y:"19:50"},
-            {n:11,d:"1 Mart Paz", i:"05:38", g:"07:03", o:"12:52", ik:"15:58", a:"18:31", y:"19:51"},
-            {n:12,d:"2 Mart Pzt", i:"05:37", g:"07:01", o:"12:52", ik:"15:59", a:"18:33", y:"19:52"},
-            {n:13,d:"3 Mart Sal", i:"05:35", g:"07:00", o:"12:52", ik:"16:00", a:"18:34", y:"19:53"},
-            {n:14,d:"4 Mart Çar", i:"05:33", g:"06:58", o:"12:51", ik:"16:01", a:"18:35", y:"19:54"},
-            {n:15,d:"5 Mart Per", i:"05:32", g:"06:56", o:"12:51", ik:"16:01", a:"18:36", y:"19:55"},
-            {n:16,d:"6 Mart Cum", i:"05:30", g:"06:55", o:"12:51", ik:"16:02", a:"18:37", y:"19:57"},
-            {n:17,d:"7 Mart Cmt", i:"05:29", g:"06:53", o:"12:51", ik:"16:03", a:"18:38", y:"19:58"},
-            {n:18,d:"8 Mart Paz", i:"05:27", g:"06:52", o:"12:51", ik:"16:03", a:"18:40", y:"19:59"},
-            {n:19,d:"9 Mart Pzt", i:"05:25", g:"06:50", o:"12:50", ik:"16:04", a:"18:41", y:"20:00"},
-            {n:20,d:"10 Mart Sal", i:"05:24", g:"06:48", o:"12:50", ik:"16:05", a:"18:42", y:"20:01"},
-            {n:21,d:"11 Mart Çar", i:"05:22", g:"06:47", o:"12:50", ik:"16:05", a:"18:43", y:"20:02"},
-            {n:22,d:"12 Mart Per", i:"05:20", g:"06:45", o:"12:50", ik:"16:06", a:"18:44", y:"20:04"},
-            {n:23,d:"13 Mart Cum", i:"05:19", g:"06:43", o:"12:49", ik:"16:07", a:"18:45", y:"20:05"},
-            {n:24,d:"14 Mart Cmt", i:"05:17", g:"06:42", o:"12:49", ik:"16:07", a:"18:46", y:"20:06"},
-            {n:25,d:"15 Mart Paz", i:"05:15", g:"06:40", o:"12:49", ik:"16:08", a:"18:47", y:"20:07"},
-            {n:26,d:"16 Mart Pzt", i:"05:13", g:"06:38", o:"12:48", ik:"16:09", a:"18:49", y:"20:08"},
-            {n:27,d:"17 Mart Sal", i:"05:12", g:"06:37", o:"12:48", ik:"16:09", a:"18:50", y:"20:09"},
-            {n:28,d:"18 Mart Çar", i:"05:10", g:"06:35", o:"12:48", ik:"16:10", a:"18:51", y:"20:11"},
-            {n:29,d:"19 Mart Per", i:"05:08", g:"06:33", o:"12:48", ik:"16:10", a:"18:52", y:"20:12"}
-        ];
+  <!-- Scroll butonu -->
+  <div class="scroll-hint" onclick="scrollToCalendar()">
+    <span>↓</span> Ramazan Takvimi
+  </div>
+</section>
 
-        function updateTimer() {
-            const now = new Date();
-            // Simülasyon: Bugünü listeden bul (Gerçek tarihe göre eşleşme yapılabilir)
-            const bugun = imsakiye[0]; 
+<!-- ══ TAKVİM -->
+<section class="calendar-section" id="calendar">
+  <div class="cal-title">Samsun Ramazan Takvimi</div>
+  <div class="cal-sub">2026 · Tüm vakitler yerel saat</div>
+  <div class="mtabs" id="mtabs"></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Tarih</th><th>İmsak</th><th>Güneş</th><th>Öğle</th><th>İkindi</th><th>Akşam</th><th>Yatsı</th></tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</section>
 
-            const vakitler = [
-                { isim: "İMSAK", saat: bugun.i }, { isim: "GÜNEŞ", saat: bugun.g },
-                { isim: "ÖĞLE", saat: bugun.o }, { isim: "İKİNDİ", saat: bugun.ik },
-                { isim: "AKŞAM", saat: bugun.a }, { isim: "YATSI", saat: bugun.y }
-            ];
+<script>
+/* ══════════════════════════════════════ VERİ */
+const imsakiye=[
+  {n:1,  d:"19/02/2026",tarih:"2026-02-19",i:"05:52",g:"07:18",o:"12:54",ik:"15:50",a:"18:20",y:"19:40",ay:"Şubat",kadir:false},
+  {n:2,  d:"20/02/2026",tarih:"2026-02-20",i:"05:51",g:"07:16",o:"12:53",ik:"15:51",a:"18:21",y:"19:41",ay:"Şubat",kadir:false},
+  {n:3,  d:"21/02/2026",tarih:"2026-02-21",i:"05:50",g:"07:15",o:"12:53",ik:"15:52",a:"18:22",y:"19:42",ay:"Şubat",kadir:false},
+  {n:4,  d:"22/02/2026",tarih:"2026-02-22",i:"05:48",g:"07:13",o:"12:53",ik:"15:52",a:"18:23",y:"19:43",ay:"Şubat",kadir:false},
+  {n:5,  d:"23/02/2026",tarih:"2026-02-23",i:"05:47",g:"07:12",o:"12:53",ik:"15:53",a:"18:24",y:"19:44",ay:"Şubat",kadir:false},
+  {n:6,  d:"24/02/2026",tarih:"2026-02-24",i:"05:45",g:"07:10",o:"12:53",ik:"15:54",a:"18:26",y:"19:45",ay:"Şubat",kadir:false},
+  {n:7,  d:"25/02/2026",tarih:"2026-02-25",i:"05:44",g:"07:09",o:"12:53",ik:"15:55",a:"18:27",y:"19:46",ay:"Şubat",kadir:false},
+  {n:8,  d:"26/02/2026",tarih:"2026-02-26",i:"05:43",g:"07:07",o:"12:53",ik:"15:56",a:"18:28",y:"19:47",ay:"Şubat",kadir:false},
+  {n:9,  d:"27/02/2026",tarih:"2026-02-27",i:"05:41",g:"07:06",o:"12:52",ik:"15:57",a:"18:29",y:"19:49",ay:"Şubat",kadir:false},
+  {n:10, d:"28/02/2026",tarih:"2026-02-28",i:"05:40",g:"07:04",o:"12:52",ik:"15:57",a:"18:30",y:"19:50",ay:"Şubat",kadir:false},
+  {n:11, d:"01/03/2026",tarih:"2026-03-01",i:"05:38",g:"07:03",o:"12:52",ik:"15:58",a:"18:31",y:"19:51",ay:"Mart",kadir:false},
+  {n:12, d:"02/03/2026",tarih:"2026-03-02",i:"05:37",g:"07:01",o:"12:52",ik:"15:59",a:"18:33",y:"19:52",ay:"Mart",kadir:false},
+  {n:13, d:"03/03/2026",tarih:"2026-03-03",i:"05:35",g:"07:00",o:"12:52",ik:"16:00",a:"18:34",y:"19:53",ay:"Mart",kadir:false},
+  {n:14, d:"04/03/2026",tarih:"2026-03-04",i:"05:33",g:"06:58",o:"12:51",ik:"16:01",a:"18:35",y:"19:54",ay:"Mart",kadir:false},
+  {n:15, d:"05/03/2026",tarih:"2026-03-05",i:"05:32",g:"06:56",o:"12:51",ik:"16:01",a:"18:36",y:"19:55",ay:"Mart",kadir:false},
+  {n:16, d:"06/03/2026",tarih:"2026-03-06",i:"05:30",g:"06:55",o:"12:51",ik:"16:02",a:"18:37",y:"19:57",ay:"Mart",kadir:false},
+  {n:17, d:"07/03/2026",tarih:"2026-03-07",i:"05:29",g:"06:53",o:"12:51",ik:"16:03",a:"18:38",y:"19:58",ay:"Mart",kadir:false},
+  {n:18, d:"08/03/2026",tarih:"2026-03-08",i:"05:27",g:"06:52",o:"12:51",ik:"16:03",a:"18:40",y:"19:59",ay:"Mart",kadir:false},
+  {n:19, d:"09/03/2026",tarih:"2026-03-09",i:"05:25",g:"06:50",o:"12:50",ik:"16:04",a:"18:41",y:"20:00",ay:"Mart",kadir:false},
+  {n:20, d:"10/03/2026",tarih:"2026-03-10",i:"05:24",g:"06:48",o:"12:50",ik:"16:05",a:"18:42",y:"20:01",ay:"Mart",kadir:false},
+  {n:21, d:"11/03/2026",tarih:"2026-03-11",i:"05:22",g:"06:47",o:"12:50",ik:"16:05",a:"18:43",y:"20:02",ay:"Mart",kadir:false},
+  {n:22, d:"12/03/2026",tarih:"2026-03-12",i:"05:20",g:"06:45",o:"12:50",ik:"16:06",a:"18:44",y:"20:04",ay:"Mart",kadir:false},
+  {n:23, d:"13/03/2026",tarih:"2026-03-13",i:"05:19",g:"06:43",o:"12:49",ik:"16:07",a:"18:45",y:"20:05",ay:"Mart",kadir:false},
+  {n:24, d:"14/03/2026",tarih:"2026-03-14",i:"05:17",g:"06:42",o:"12:49",ik:"16:07",a:"18:46",y:"20:06",ay:"Mart",kadir:false},
+  {n:25, d:"15/03/2026",tarih:"2026-03-15",i:"05:15",g:"06:40",o:"12:49",ik:"16:08",a:"18:47",y:"20:07",ay:"Mart",kadir:false},
+  {n:26, d:"16/03/2026",tarih:"2026-03-16",i:"05:13",g:"06:38",o:"12:48",ik:"16:09",a:"18:49",y:"20:08",ay:"Mart",kadir:true},
+  {n:27, d:"17/03/2026",tarih:"2026-03-17",i:"05:12",g:"06:37",o:"12:48",ik:"16:09",a:"18:50",y:"20:09",ay:"Mart",kadir:false},
+  {n:28, d:"18/03/2026",tarih:"2026-03-18",i:"05:10",g:"06:35",o:"12:48",ik:"16:10",a:"18:51",y:"20:11",ay:"Mart",kadir:false},
+  {n:29, d:"19/03/2026",tarih:"2026-03-19",i:"05:08",g:"06:33",o:"12:48",ik:"16:10",a:"18:52",y:"20:12",ay:"Mart",kadir:false},
+];
 
-            let hedefIdx = -1;
-            for (let i = 0; i < vakitler.length; i++) {
-                const [vh, vm] = vakitler[i].saat.split(':');
-                const vDate = new Date(); vDate.setHours(vh, vm, 0);
-                if (now < vDate) { hedefIdx = i; break; }
-            }
+/* ══════════════════════════════════════ SHAPES */
+[
+  {t:'circle',w:22,top:'11%',left:'4%',dur:6.5,del:0},
+  {t:'circle',w:12,top:'20%',left:'89%',dur:8,del:1},
+  {t:'circle',w:9, top:'68%',left:'93%',dur:7,del:2},
+  {t:'circle',w:16,top:'82%',left:'6%', dur:9,del:.5},
+  {t:'diamond',w:16,top:'36%',left:'5%',dur:9,del:.3},
+  {t:'diamond',w:12,top:'74%',left:'82%',dur:7.5,del:1.5},
+  {t:'tri',top:'17%',left:'80%',dur:8.5,del:.8},
+  {t:'tri',top:'60%',left:'2%', dur:6.5,del:2},
+].forEach(s=>{
+  const el=document.createElement('div');
+  el.classList.add('sh');
+  if(s.t==='diamond') el.classList.add('diamond');
+  else if(s.t==='tri') el.classList.add('tri');
+  if(s.t!=='tri'){el.style.width=s.w+'px';el.style.height=s.w+'px';}
+  el.style.top=s.top;el.style.left=s.left;
+  el.style.animationDuration=s.dur+'s';
+  el.style.animationDelay=s.del+'s';
+  document.getElementById('shapes').appendChild(el);
+});
 
-            let hedef, onceki;
-            if (hedefIdx === -1) { 
-                hedef = { isim: "İMSAK", saat: imsakiye[1].i, yarin: true };
-                onceki = vakitler[5];
-            } else {
-                hedef = vakitler[hedefIdx];
-                onceki = hedefIdx === 0 ? { saat: "00:00" } : vakitler[hedefIdx-1];
-            }
+/* ══════════════════════════════════════ HELPERS */
+const GUNLER=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+const AYLAR =["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+function todayStr(){const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;}
+function getBugun(){return imsakiye.find(r=>r.tarih===todayStr())||null;}
+function toMin(s){const[h,m]=s.split(':').map(Number);return h*60+m;}
+function toMs(s){return toMin(s)*60000;}
+function msToHMS(ms){
+  if(ms<0)ms=0;
+  const h=Math.floor(ms/3600000);
+  const m=Math.floor((ms%3600000)/60000);
+  const s=Math.floor((ms%60000)/1000);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
 
-            const [hh, mm] = hedef.saat.split(':');
-            const target = new Date(); target.setHours(hh, mm, 0);
-            if (hedef.yarin) target.setDate(target.getDate() + 1);
+function getVakitler(bugun){
+  if(!bugun)return[];
+  return [
+    {isim:"İMSAK", saat:bugun.i},
+    {isim:"GÜNEŞ", saat:bugun.g},
+    {isim:"ÖĞLE",  saat:bugun.o},
+    {isim:"İKİNDİ",saat:bugun.ik},
+    {isim:"AKŞAM", saat:bugun.a},
+    {isim:"YATSI", saat:bugun.y},
+  ];
+}
 
-            const [ph, pm] = onceki.saat.split(':');
-            const prev = new Date(); prev.setHours(ph, pm, 0);
+/* ══════════════════════════════════════ STATE */
+let manuelVakit = null;
+let otoIdx = -1;
 
-            const diff = target - now;
-            const total = target - prev;
-            const elapsed = now - prev;
+/* ══════════════════════════════════════ ROZET */
+function updateGunRozet(bugun){
+  const el=document.getElementById('gun-rozet');
+  const txt=document.getElementById('gun-text');
+  if(!bugun){el.style.display='none';return;}
+  el.style.display='inline-flex';
+  txt.textContent=`Ramazan'ın ${bugun.n}. günü`;
+}
 
-            // KUSURSUZ BAR HESABI
-            // Yüzde 0-1 arası: Geçen / Toplam
-            let percent = elapsed / total;
-            if (percent < 0) percent = 0;
-            if (percent > 1) percent = 1;
+/* ══════════════════════════════════════ BİLDİRİM */
+let bildirimIzni = false;
+async function bildirimIzniAl(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'granted'){ bildirimIzni=true; return; }
+  if(Notification.permission !== 'denied'){
+    const p = await Notification.requestPermission();
+    bildirimIzni = p === 'granted';
+  }
+}
+function bildirimGonder(baslik, mesaj){
+  if(!bildirimIzni) return;
+  try{
+    new Notification(baslik, {
+      body: mesaj,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">☽</text></svg>',
+      badge:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">☽</text></svg>',
+      vibrate:[200,100,200],
+      tag:'vakit-bildirimi',
+      renotify:true
+    });
+  }catch(e){}
+}
+bildirimIzniAl();
 
-            // -135 dereceden başlayıp 180 derece dönerek +45 derecede biter.
-            const rotation = -135 + (percent * 180);
-            document.getElementById('active-bar').style.transform = `rotate(${rotation}deg)`;
+/* ══════════════════════════════════════ TOP PATLAMASI (CANVAS) */
+const canvas = document.createElement('canvas');
+canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:500;';
+document.body.appendChild(canvas);
+const ctx2d = canvas.getContext('2d');
+let particles = [];
+let fireworksActive = false;
+let fireworksTimer = null;
 
-            document.getElementById('status').innerText = hedef.isim + " VAKTİNE KALAN";
-            document.getElementById('next-vakit-time').innerText = "Vakit Saati: " + hedef.saat;
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-            const h = Math.floor(diff / 3600000);
-            const m = Math.floor((diff / 60000) % 60);
-            const s = Math.floor((diff / 1000) % 60);
-            document.getElementById('h').innerText = h.toString().padStart(2, '0');
-            document.getElementById('m').innerText = m.toString().padStart(2, '0');
-            document.getElementById('s').innerText = s.toString().padStart(2, '0');
-        }
+class Particle {
+  constructor(x, y, color){
+    this.x = x; this.y = y;
+    this.color = color;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 3 + Math.random() * 6;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed - 3;
+    this.gravity = 0.15;
+    this.life = 1;
+    this.decay = 0.012 + Math.random() * 0.012;
+    this.size = 3 + Math.random() * 4;
+    this.trail = [];
+  }
+  update(){
+    this.trail.push({x:this.x, y:this.y});
+    if(this.trail.length > 6) this.trail.shift();
+    this.vx *= 0.98;
+    this.vy += this.gravity;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life -= this.decay;
+  }
+  draw(){
+    // iz
+    for(let i=0;i<this.trail.length;i++){
+      const t = this.trail[i];
+      const alpha = (i/this.trail.length) * this.life * 0.4;
+      ctx2d.beginPath();
+      ctx2d.arc(t.x, t.y, this.size*(i/this.trail.length)*0.7, 0, Math.PI*2);
+      ctx2d.fillStyle = this.color.replace('1)', `${alpha})`);
+      ctx2d.fill();
+    }
+    // top
+    ctx2d.beginPath();
+    ctx2d.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx2d.fillStyle = this.color.replace('1)', `${this.life})`);
+    ctx2d.fill();
+  }
+}
 
-        function togglePanel() {
-            document.getElementById('side-panel').classList.toggle('active');
-            document.getElementById('main-card').classList.toggle('shifted');
-        }
+function launchFirework(x, y){
+  const COLORS = [
+    'rgba(255,215,0,1)',    // altın
+    'rgba(255,160,30,1)',   // turuncu
+    'rgba(61,186,111,1)',   // yeşil
+    'rgba(255,255,255,1)',  // beyaz
+    'rgba(255,100,100,1)',  // kırmızı
+    'rgba(150,200,255,1)',  // mavi
+  ];
+  const color = COLORS[Math.floor(Math.random()*COLORS.length)];
+  const count = 60 + Math.floor(Math.random()*40);
+  for(let i=0;i<count;i++){
+    particles.push(new Particle(x, y, color));
+  }
+}
 
-        document.getElementById('theme-toggle').onclick = () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-        };
+function fireworksLoop(){
+  if(!fireworksActive){ ctx2d.clearRect(0,0,canvas.width,canvas.height); return; }
+  ctx2d.clearRect(0,0,canvas.width,canvas.height);
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(fireworksLoop);
+}
 
-        const tbody = document.getElementById('imsakiye-body');
-        imsakiye.forEach(row => {
-            tbody.innerHTML += `<tr><td>${row.n}</td><td>${row.d}</td><td>${row.i}</td><td>${row.o}</td><td>${row.a}</td><td>${row.y}</td></tr>`;
-        });
+function startFireworks(){
+  fireworksActive = true;
+  particles = [];
+  const W = canvas.width, H = canvas.height;
+  // İlk 8 saniye boyunca rastgele havai fişek at
+  let count = 0;
+  const interval = setInterval(()=>{
+    const x = W*0.2 + Math.random()*W*0.6;
+    const y = H*0.1 + Math.random()*H*0.5;
+    launchFirework(x, y);
+    count++;
+    if(count >= 18){ clearInterval(interval); }
+  }, 450);
+  fireworksLoop();
+  if(fireworksTimer) clearTimeout(fireworksTimer);
+  fireworksTimer = setTimeout(()=>{
+    fireworksActive = false;
+  }, 10000);
+}
 
-        setInterval(updateTimer, 1000); updateTimer();
-    </script>
+/* ══════════════════════════════════════ ZİL ANİMASYON */
+let overlayTimer=null;
+let lastShownVakit=null;
+function showVakitAnim(isim){
+  // Aynı vakiti tekrar gösterme
+  if(lastShownVakit===isim) return;
+  lastShownVakit=isim;
+
+  const mesajlar={
+    "İMSAK":"🌙 Sahur Vakti Başladı",
+    "GÜNEŞ":"☀️ Güneş Doğdu",
+    "ÖĞLE":"🕛 Öğle Vakti",
+    "İKİNDİ":"🕓 İkindi Vakti",
+    "AKŞAM":"🎆 İftar Hayırlı Olsun!",
+    "YATSI":"⭐ Yatsı Vakti",
+  };
+  const msg=mesajlar[isim]||isim+' Vakti';
+  document.getElementById('vakit-msg').textContent=msg;
+  const overlay=document.getElementById('vakit-overlay');
+  const flash=document.getElementById('ring-flash');
+  overlay.classList.add('show');
+  flash.classList.add('flash');
+
+  // İftar'da top patlaması + bildirim özel
+  if(isim==="AKŞAM"){
+    startFireworks();
+    bildirimGonder('🎆 İftar Vakti Geldi!', 'Hayırlı iftarlar! Samsun — ' + new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}));
+  } else {
+    bildirimGonder('🕌 ' + isim + ' Vakti', msg.replace(/^[^\s]+\s/,'') + ' — ' + new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}));
+  }
+
+  if(overlayTimer) clearTimeout(overlayTimer);
+  overlayTimer=setTimeout(()=>{
+    overlay.classList.remove('show');
+    setTimeout(()=>flash.classList.remove('flash'),500);
+  },5000);
+}
+
+
+/* ══════════════════════════════════════ HAVA DURUMU */
+const WMO_CODES={0:'Açık',1:'Az Bulutlu',2:'Parçalı Bulutlu',3:'Kapalı',45:'Sisli',48:'Buzlu Sis',51:'Hafif Çisenti',53:'Çisenti',55:'Yoğun Çisenti',61:'Hafif Yağmur',63:'Yağmurlu',65:'Şiddetli Yağmur',71:'Hafif Kar',73:'Karlı',75:'Yoğun Kar',80:'Sağanak',81:'Kuvvetli Sağanak',82:'Şiddetli Sağanak',95:'Fırtınalı',96:'Dolu',99:'Şiddetli Fırtına'};
+const WMO_ICON={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌦️',63:'🌧️',65:'🌧️',71:'🌨️',73:'❄️',75:'❄️',80:'🌧️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
+async function fetchHava(){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=41.2867&longitude=36.33&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m&wind_speed_unit=kmh&timezone=Europe%2FIstanbul');
+    const d=await r.json();
+    const c=d.current;
+    const code=c.weathercode;
+    document.getElementById('hava-icon').textContent=WMO_ICON[code]||'🌡️';
+    document.getElementById('hava-temp').textContent=Math.round(c.temperature_2m)+'°C';
+    document.getElementById('hava-desc').textContent=WMO_CODES[code]||'Bilinmiyor';
+    document.getElementById('hava-extra').textContent=`💨 ${Math.round(c.windspeed_10m)} km/s · 💧 %${c.relativehumidity_2m}`;
+  }catch(e){
+    document.getElementById('hava-icon').textContent='🌡️';
+    document.getElementById('hava-desc').textContent='Bağlantı yok';
+    document.getElementById('hava-extra').textContent='Samsun';
+  }
+}
+fetchHava();
+setInterval(fetchHava,600000);
+
+/* ══════════════════════════════════════ VAKİT PİCKER */
+function buildVakitPicker(bugun, autoIdx){
+  const container=document.getElementById('vakit-picker');
+  container.innerHTML='';
+  if(!bugun) return;
+  const vakitler=getVakitler(bugun);
+  vakitler.forEach((v,i)=>{
+    const btn=document.createElement('button');
+    btn.className='vp-btn';
+    const isActive=manuelVakit===v.isim||(manuelVakit===null&&i===autoIdx);
+    const isAuto=manuelVakit===null&&i===autoIdx;
+    if(isActive) btn.classList.add('active');
+    if(isAuto)   btn.classList.add('auto-tag');
+    btn.innerHTML=`<span class="vp-isim">${v.isim}</span><span class="vp-saat">${v.saat}</span>`;
+    btn.onclick=()=>{
+      manuelVakit=(manuelVakit===v.isim)?null:v.isim;
+      buildVakitPicker(bugun,otoIdx);
+    };
+    container.appendChild(btn);
+  });
+}
+
+/* ══════════════════════════════════════ RING */
+const ARC_LEN=509;
+function updateTimer(){
+  const now=new Date();
+  document.getElementById('date-line').textContent=
+    `${now.getDate()} ${AYLAR[now.getMonth()]} ${now.getFullYear()} / ${GUNLER[now.getDay()]}`;
+
+  const bugun=getBugun();
+  updateGunRozet(bugun);
+
+  if(!bugun){
+    document.getElementById('ri-label').textContent='RAMAZAN DIŞI';
+    document.getElementById('ri-vakit').textContent='---';
+    document.getElementById('ri-time').textContent='--:--';
+    ['h','m','s'].forEach(id=>document.getElementById(id).textContent='--');
+    return;
+  }
+
+  const vakitler=getVakitler(bugun);
+  const nowMin=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+
+  // Otomatik en yakın
+  let autoIdx=-1;
+  for(let i=0;i<vakitler.length;i++) if(nowMin<toMin(vakitler[i].saat)){autoIdx=i;break;}
+  otoIdx=autoIdx;
+
+  // Vakit geldi mi? (animasyon)
+  if(autoIdx>0){
+    const prevName=vakitler[autoIdx-1].isim;
+    const secsSince=(nowMin-toMin(vakitler[autoIdx-1].saat))*60;
+    if(secsSince>=0&&secsSince<5){
+      showVakitAnim(prevName);
+    }
+  } else if(autoIdx===-1){
+    // Yatsı geçti
+    const secsSince=(nowMin-toMin(vakitler[5].saat))*60;
+    if(secsSince>=0&&secsSince<5){
+      showVakitAnim(vakitler[5].isim);
+    }
+  }
+
+  // Hangi vakite sayaç
+  let hedefIdx=manuelVakit!==null?vakitler.findIndex(v=>v.isim===manuelVakit):autoIdx;
+  if(hedefIdx===-1) hedefIdx=autoIdx;
+
+  // Picker güncelle
+  buildVakitPicker(bugun,otoIdx);
+
+  let hedef,prevSaat;
+  if(hedefIdx===-1){
+    const idx=imsakiye.findIndex(r=>r.tarih===todayStr());
+    const yarin=idx>=0&&idx+1<imsakiye.length?imsakiye[idx+1]:null;
+    hedef={isim:"İMSAK",saat:yarin?yarin.i:"05:00"};
+    prevSaat=bugun.y;
+  } else {
+    hedef=vakitler[hedefIdx];
+    prevSaat=hedefIdx===0?"00:00":vakitler[hedefIdx-1].saat;
+  }
+
+  const[hh,mm]=hedef.saat.split(':').map(Number);
+  const target=new Date(now);target.setHours(hh,mm,0,0);
+  if(target<=now)target.setDate(target.getDate()+1);
+  const[ph,pm]=prevSaat.split(':').map(Number);
+  const prev=new Date(now);prev.setHours(ph,pm,0,0);
+  if(prev>now)prev.setDate(prev.getDate()-1);
+
+  const diff=target-now;
+  const total=target-prev;
+  const elapsed=now-prev;
+  const pct=Math.max(0,Math.min(1,elapsed/total));
+  const offset=ARC_LEN*(1-pct);
+
+  const rf=document.getElementById('rfill');
+  rf.style.strokeDashoffset=offset;
+
+  // Ring rengi + sayaç rengi
+  const dH=Math.floor(diff/3600000);
+  const dM=Math.floor((diff%3600000)/60000);
+  let ringColor='var(--accent)';let ringFilter='drop-shadow(0 0 9px var(--glow))';
+  if(hedef.isim==="AKŞAM"){
+    // Yakınlığa göre sarı tonu
+    if(dH===0&&dM<10){
+      ringColor='#ff8c00';ringFilter='drop-shadow(0 0 14px rgba(255,140,0,.6))';
+    } else {
+      ringColor='#f0c040';ringFilter='drop-shadow(0 0 10px rgba(240,192,64,.5))';
+    }
+  } else if(hedef.isim==="İMSAK"){
+    ringColor='#6ec6f0';ringFilter='drop-shadow(0 0 10px rgba(110,198,240,.4))';
+  }
+  rf.style.stroke=ringColor;
+  rf.style.filter=ringFilter;
+
+  document.getElementById('ri-label').textContent=hedef.isim+' VAKTİNE KALAN';
+  document.getElementById('ri-vakit').textContent=hedef.isim;
+  document.getElementById('ri-vakit').style.color=ringColor;
+  document.getElementById('ri-time').textContent=hedef.saat;
+
+  const dS=Math.floor((diff%60000)/1000);
+  document.getElementById('h').textContent=String(dH).padStart(2,'0');
+  document.getElementById('m').textContent=String(dM).padStart(2,'0');
+  document.getElementById('s').textContent=String(dS).padStart(2,'0');
+
+}
+
+async function bildirimToggle(){
+  if(!('Notification' in window)){
+    alert('Tarayıcın bildirim desteklemiyor.');return;
+  }
+  if(bildirimIzni){
+    bildirimIzni=false;
+    document.getElementById('notif-btn').textContent='🔕';
+    document.getElementById('notif-btn').classList.remove('aktif');
+  } else {
+    await bildirimIzniAl();
+    if(bildirimIzni){
+      document.getElementById('notif-btn').textContent='🔔';
+      document.getElementById('notif-btn').classList.add('aktif');
+      bildirimGonder('✅ Bildirimler Açık','Vakit gelince haber vereceğim!');
+    } else {
+      alert('Tarayıcı ayarlarından bildirim iznini açman gerekiyor.');
+    }
+  }
+}
+
+/* ══════════════════════════════════════ TEMA */
+let isLight=false;
+function toggleTheme(){
+  isLight=!isLight;
+  document.documentElement.setAttribute('data-theme',isLight?'light':'dark');
+  document.getElementById('t-icon').textContent=isLight?'🌙':'☀️';
+}
+
+/* ══════════════════════════════════════ SCROLL */
+function scrollToCalendar(){
+  document.getElementById('calendar').scrollIntoView({behavior:'smooth'});
+}
+
+/* ══════════════════════════════════════ TABLO */
+const aylar=[...new Set(imsakiye.map(r=>r.ay))];
+let aktifAy=getBugun()?.ay||aylar[0];
+
+function renderTable(){
+  const tbody=document.getElementById('tbody');
+  const bt=todayStr();
+  tbody.innerHTML='';
+  let kadirEklendi=false;
+  imsakiye.filter(r=>r.ay===aktifAy).forEach(r=>{
+    if(r.kadir&&!kadirEklendi){
+      const sep=document.createElement('tr');
+      sep.innerHTML=`<td colspan="8" class="kadir">✦ Kadir Gecesi (18 Mart 2026)</td>`;
+      tbody.appendChild(sep);kadirEklendi=true;
+    }
+    const tr=document.createElement('tr');
+    if(r.tarih===bt) tr.classList.add('today');
+    tr.innerHTML=`
+      <td style="color:var(--sub);font-size:.72rem">${r.n}</td>
+      <td style="font-family:Nunito;font-size:.78rem;font-weight:600">${r.d}</td>
+      <td>${r.i}</td><td>${r.g}</td><td>${r.o}</td><td>${r.ik}</td>
+      <td style="font-weight:700;color:var(--accent)">${r.a}</td>
+      <td>${r.y}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function buildTabs(){
+  const c=document.getElementById('mtabs');
+  aylar.forEach(ay=>{
+    const btn=document.createElement('button');
+    btn.className='mtab'+(ay===aktifAy?' active':'');
+    btn.textContent=ay;
+    btn.onclick=()=>{
+      aktifAy=ay;
+      document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');renderTable();
+    };
+    c.appendChild(btn);
+  });
+}
+
+buildTabs();
+renderTable();
+setInterval(updateTimer,1000);
+updateTimer();
+</script>
 </body>
 </html>
